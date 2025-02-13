@@ -58,6 +58,22 @@ public class ProdutoOrcamento_Controller {
     }
 
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ProdutoOrcamento_ResquestDTO dto) {
+
+        Optional<ProdutoOrcamento> produtoOpt = repository.findById(id);
+
+        ProdutoOrcamento produto = produtoOpt.get();
+        produto.setId(dto.getId());
+        produto.setNome(dto.getNome());
+        produto.setValor(dto.getValor());
+
+        ProdutoOrcamento produtoSave = repository.save(produto);
+        return ResponseEntity.ok(produtoSave);
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
 
@@ -69,9 +85,4 @@ public class ProdutoOrcamento_Controller {
         repository.deleteById(id);
         return ResponseEntity.ok().body("O ID foi deletado do banco de dados!!!");
     }
-
-
-
-
-
 }
