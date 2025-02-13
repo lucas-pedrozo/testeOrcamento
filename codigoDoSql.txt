@@ -1,0 +1,16 @@
+create database testeOrcamento
+
+create table orcamento (
+	id int primary key,
+	nomeCliente varchar(45),
+	data varchar(45)
+);
+
+create table produtoOrcamento (
+	id int primary key,
+	 orcamento_id INT,
+    nome VARCHAR(45),
+    valor VARCHAR(45),
+    FOREIGN KEY (orcamento_id) REFERENCES orcamento(id)
+);
+
