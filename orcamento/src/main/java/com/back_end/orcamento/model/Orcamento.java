@@ -1,11 +1,25 @@
 package com.back_end.orcamento.model;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity
+@Table
 public class Orcamento {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
+
+    @Column
   private String nomeCliente;
-  private Date data;
+
+    @Column
+  private String data;
+
+  // get set
+
 
     public Integer getId() {
         return id;
@@ -23,11 +37,11 @@ public class Orcamento {
         this.nomeCliente = nomeCliente;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 }
