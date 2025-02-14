@@ -1,47 +1,76 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('budget-form');
-    const addProductButton = document.getElementById('add-product');
-    const productList = document.getElementById('product-list');
-    const budgetList = document.getElementById('budget-list');
-    let productCount = 1;
+document
+  .getElementById("budget-form")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-    addProductButton.addEventListener('click', () => {
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('product');
-        productDiv.innerHTML = `
-            <label for="product-name-${productCount}">Nome do Produto:</label>
-            <input type="text" id="product-name-${productCount}" name="productName" required>
-            <label for="product-price-${productCount}">Preço:</label>
-            <input type="number" id="product-price-${productCount}" name="productPrice" required>
-        `;
-        productList.appendChild(productDiv);
-        productCount++;
-    });
+    const nomeCliente = document.getElementById("customer-name").value;
+    const data = document.getElementById("request-date").value;
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const customerName = form['name'].value;
-        const requestDate = form['requestDate'].value;
-        const products = [];
-        document.querySelectorAll('.product').forEach((product, index) => {
-            const productName = product.querySelector(`input[name="productName"]`).value;
-            const productPrice = product.querySelector(`input[name="productPrice"]`).value;
-            products.push({ name: productName, price: productPrice });
-        });
+    const requestBody = {
+      nomeCliente: nomeCliente,
+      data: data,
+    };
 
-        const budgetItem = document.createElement('li');
-        budgetItem.textContent = `Cliente: ${customerName}, Data: ${requestDate}, Produtos: ${products.map(p => `${p.name} - R$${p.price}`).join(', ')}`;
-        budgetList.appendChild(budgetItem);
+    try {
+      const response = await fetch("http://localhost:8080/api/orcamento", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-        form.reset();
-        productList.innerHTML = `
-            <div class="product">
-                <label for="product-name-0">Nome do Produto:</label>
-                <input type="text" id="product-name-0" name="productName" required>
-                <label for="product-price-0">Preço:</label>
-                <input type="number" id="product-price-0" name="productPrice" required>
-            </div>
-        `;
-        productCount = 1;
-    });
-});
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Erro ao salvar orçamento");
+      }
+
+      alert("Orçamento salvo com sucesso!");
+
+      const products = [];
+      document.querySelectorAll(".product").forEach((product) => {
+        const productName = product.querySelector(
+          `input[name="productName"]`
+        ).value;
+        const productPrice = product.querySelector(
+          `input[name="productPrice"]`
+        ).value;
+        products.push({ nome: productName, valor: productPrice });
+      });
+
+      for (let product of products) {
+        const productResponse = await fetch(
+          "http://localhost:8080/api/produtoOrcamento",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(product),
+          }
+        );
+
+        if (!productResponse.ok) {
+          console.error("Erro ao salvar produto:", product);
+        } else {
+          console.log("Produto salvo:", product);
+        }
+      }
+
+      const budgetList = document.getElementById("budget-list");
+      const listItem = document.createElement("li");
+
+      listItem.textContent = `Cliente: ${result.nomeCliente} / Data: ${
+        result.data
+      } / Produtos: ${products
+        .map((p) => `${p.nome} - R$${p.valor}`)
+        .join(", ")}`;
+
+      budgetList.appendChild(listItem);
+
+      document.getElementById("budget-form").reset();
+    } catch (error) {
+      alert("Erro: " + error.message);
+    }
+  });

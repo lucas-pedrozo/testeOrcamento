@@ -1,7 +1,8 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; 
+    box-sizing: border-box;
+    color: white;
 }
 
 body {
@@ -11,20 +12,20 @@ body {
     align-items: center;
     min-height: 100vh;
     background-size: cover;
-    background-position:bottom ;
+    background-position: bottom;
 
-    font-family: Montserrat ;
+    font-family: Montserrat;
 }
 
 .container {
     background-color: rgba(255, 255, 255, 0.1);
     border: solid 2px rgb(160, 160, 160);
     backdrop-filter: blur(20px);
-    border-radius: 40px ;
+    border-radius: 40px;
     box-shadow: 0 2px 8px black;
     width: 400px;
     padding: 20px;
-    
+
     h1 {
         color: white;
         text-align: center;
@@ -34,14 +35,17 @@ body {
 
     form {
         color: white;
+
         div {
             display: flex;
-            flex-direction: column ;
+            flex-direction: column;
+
             label {
                 margin-left: 10px;
                 margin-top: 10px;
-                margin-bottom: 4px; 
+                margin-bottom: 4px;
             }
+
             input {
                 border: solid white 1px;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.637);
@@ -57,14 +61,17 @@ body {
 
         #product-list {
             margin-bottom: 20px;
+
             .product {
                 display: flex;
-                flex-direction: column ;
+                flex-direction: column;
+
                 label {
                     margin-left: 10px;
                     margin-top: 10px;
-                    margin-bottom: 4px; 
+                    margin-bottom: 4px;
                 }
+
                 input {
                     border: solid white 1px;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.637);
@@ -85,18 +92,46 @@ body {
             justify-content: center !important;
             flex-direction: row !important;
             gap: 20px;
-            
+
             button {
                 text-align: center;
                 width: 180px;
                 height: 36px;
                 font-size: 16px;
-                
+                cursor: pointer;
+                color: black;
+
                 border-radius: 20px;
-                border: none; 
-                box-shadow:  0 0 8px rgba(0, 0, 0, 0.418);
+                border: none;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.418);
                 font-weight: bold;
+
+                transition: 400ms all !important;
+
+                &:hover {
+                    transform: scale(1.02, 1.02) !important;
+                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.445);
+                }
             }
+        }
+    }
+
+    h4 {
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+
+        li {
+            text-align: center;
+            list-style-type: decimal;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
         }
     }
 }

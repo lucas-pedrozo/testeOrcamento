@@ -1,12 +1,10 @@
 package com.back_end.orcamento.controller;
 
-import com.back_end.orcamento.dto.Orcamento_ResquestDTO;
 import com.back_end.orcamento.dto.ProdutoOrcamento_ResquestDTO;
 import com.back_end.orcamento.model.Orcamento;
 import com.back_end.orcamento.model.ProdutoOrcamento;
 import com.back_end.orcamento.repository.Orcamento_Repository;
 import com.back_end.orcamento.repository.ProdutoOrcamento_Repository;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +31,29 @@ public class ProdutoOrcamento_Controller {
     @GetMapping("/{id}")
     public ProdutoOrcamento findById(@PathVariable Integer id) {
         return this.repository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Produto Orçamento não foi encontrado"));
+                new IllegalArgumentException("O ProdutoOrcamenrto não foi encontrado !!!"));
     }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody ProdutoOrcamento_ResquestDTO dto) {
 
-        if (dto.getOrcamento_id() == null) {
-            return ResponseEntity.badRequest().body("O campo orcamento_id não pode estar vazio!!!");
+        if (dto.getValor() == null) {
+            return ResponseEntity.badRequest().body("O campo valor não pode estar vazio!!!");
         }
 
-        Optional<Orcamento> optionalOrcamento = orcamentoRepository.findById(dto.getOrcamento_id());
+        if (dto.getNome() == null) {
+            return ResponseEntity.badRequest().body("O campo nome não pode estar vazio!!!");
+        }
+
+        Integer maiorId = orcamentoRepository.findAll().stream()
+                .mapToInt(Orcamento::getId)
+                .max()
+                .orElse(0);
+
+        Optional<Orcamento> optionalOrcamento = orcamentoRepository.findById(maiorId);
+
         if (!optionalOrcamento.isPresent()) {
-            return ResponseEntity.badRequest().body(" ID do Orçamento não encontrado!!!");
+            return ResponseEntity.badRequest().body("Nenhum orçamento encontrado!!!");
         }
 
         ProdutoOrcamento produto = new ProdutoOrcamento();
@@ -58,11 +66,25 @@ public class ProdutoOrcamento_Controller {
     }
 
 
-
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ProdutoOrcamento_ResquestDTO dto) {
 
         Optional<ProdutoOrcamento> produtoOpt = repository.findById(id);
+
+        if (dto.getId() == null) {
+            return ResponseEntity.badRequest().body("O ID fornecido é invalido tente com outro Id !!!");
+        }
+
+        if (dto.getOrcamento_id() == null) {
+            return ResponseEntity.badRequest().body("O ID fornecido é invalido!!!");
+        }
+
+        if (dto.getNome() == null) {
+            return ResponseEntity.badRequest().body("O campo não poder ser vazio!!!");
+        }
+
+        if (dto.getValor() == null) {
+            return ResponseEntity.badRequest().body("O campo não poder ser vazio!!!");        }
 
         ProdutoOrcamento produto = produtoOpt.get();
         produto.setId(dto.getId());
