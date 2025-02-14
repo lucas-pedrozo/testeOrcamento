@@ -47,6 +47,10 @@ public class Orcamento_Controller {
             return ResponseEntity.badRequest().body("O campo não pode ser vazio!!!");
         }
 
+        if (dto.getData() == null) {
+            return ResponseEntity.badRequest().body("A data deve não pode esta vazia!!!");
+        }
+
         Orcamento orcamento = new Orcamento();
         orcamento.setNomeCliente(dto.getNomeCliente());
         orcamento.setData(dto.getData());
@@ -68,6 +72,14 @@ public class Orcamento_Controller {
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Orcamento_ResquestDTO dto) {
 
         Optional<Orcamento> orcamentoOpt = repository.findById(id);
+
+        if (dto.getData() == null) {
+            return ResponseEntity.badRequest().body("O campo não pode ser vazio!!!");
+        }
+
+        if (dto.getNomeCliente() == null) {
+            return ResponseEntity.badRequest().body("O campo não pode ser vazio!!!");
+        }
 
         Orcamento orcamento = orcamentoOpt.get();
         orcamento.setNomeCliente(dto.getNomeCliente());
