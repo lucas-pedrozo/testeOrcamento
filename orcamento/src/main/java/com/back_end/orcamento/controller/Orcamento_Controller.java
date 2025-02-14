@@ -18,7 +18,6 @@ public class Orcamento_Controller {
 
     private Integer maiorId;
 
-
     private void atualizarMaiorId() {
         maiorId = repository.findAll().stream()
                 .mapToInt(Orcamento::getId)
