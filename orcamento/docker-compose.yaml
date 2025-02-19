@@ -1,0 +1,19 @@
+services:
+
+  mysql:
+    image: docker.io/mariadb:10.4
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.docker/data/:/var/lib/mysql
+      - ./.docker/sql/:/docker-entrypoint-initdb.d/
+    environment:
+      - MYSQL_DATABASE=orcamento
+      - MYSQL_ROOT_PASSWORD=root
+
+  nginx:
+    image: docker.io/nginx:latest
+    ports:
+      - 8029:80
+    volumes:
+      - ../:/usr/share/nginx/html/
